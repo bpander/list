@@ -1,6 +1,14 @@
+import { uniqueId } from 'lib/uniqueId'
 
 export interface Item {
+    id: string;
     name: string;
-    quantity: number;
-    timesAdded: number;
 }
+
+export const createItem = (overrides: Partial<Item> = {}): Item => {
+    return {
+        id: uniqueId(),
+        name: '',
+        ...overrides,
+    };
+};
