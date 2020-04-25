@@ -1,13 +1,14 @@
 import { createSlice } from 'lib/createSlice';
 import { Item, createItem } from 'models/Item';
 import { uniqueId } from 'lib/uniqueId';
+import { shuffle } from 'lib/shuffle';
 
 interface ItemState {
     list: Item[];
 }
 
 const initialItemState: ItemState = {
-    list: [
+    list: shuffle([
         {
             id: uniqueId(),
             name: 'Bananas',
@@ -24,7 +25,7 @@ const initialItemState: ItemState = {
             id: uniqueId(),
             name: 'Cream',
         },
-    ],
+    ]),
 };
 
 const { reducer, configureAction, update } = createSlice(initialItemState, 'ITEM');

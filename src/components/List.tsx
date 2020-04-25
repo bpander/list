@@ -16,6 +16,10 @@ const SortableListContext = React.createContext<SortableListContextValue<any>>({
     elementMap: new Map(),
 });
 
+const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent => {
+    return 'touches' in event;
+};
+
 interface SortableListProps<T> {
     items: T[];
     onChange: (items: T[]) => void;
@@ -23,6 +27,7 @@ interface SortableListProps<T> {
     renderDropIndicator: () => JSX.Element;
     keyExtractor: (item: T, index: number) => string | number;
 }
+
 const SortableList = function<T>(props: SortableListProps<T>) {
     const { onChange } = props;
     const elementMapRef = useRef(new Map<T, Element>());
@@ -39,19 +44,21 @@ const SortableList = function<T>(props: SortableListProps<T>) {
             return;
         }
         let _dropIndex: number | null = null;
-        const onMouseMove = (e: MouseEvent) => {
+        const onMove = (e: MouseEvent | TouchEvent) => {
             _dropIndex = props.items.findIndex(item => {
                 const element = elementMapRef.current.get(item);
                 if (!element) { return false; }
                 const { top, bottom } = element.getBoundingClientRect();
                 const mid = (bottom + top) / 2;
-                return e.clientY <= mid;
+                return (isTouchEvent(e) ? e.touches[0] : e).clientY <= mid;
             });
             setDropIndex(_dropIndex);
         };
         const cleanUp = () => {
+            window.removeEventListener('touchmove', onMove);
+            window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('touchend', cleanUp);
             window.removeEventListener('mouseup', cleanUp);
-            window.removeEventListener('mousemove', onMouseMove);
             const _draggedItem = draggedItem;
             setDraggedItem(null);
             setDropIndex(null);
@@ -59,7 +66,9 @@ const SortableList = function<T>(props: SortableListProps<T>) {
                 onChange(moveTo(props.items, _draggedItem, _dropIndex));
             }
         };
-        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('touchmove', onMove);
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('touchend', cleanUp);
         window.addEventListener('mouseup', cleanUp);
         return cleanUp;
     }, [draggedItem, onChange, props.items]);
@@ -98,6 +107,7 @@ const ListItem: React.FC<{ item: Item }> = props => {
                             e.preventDefault();
                             ctx.setDraggedItem(props.item);
                         }}
+                        onTouchStart={() => ctx.setDraggedItem(props.item)}
                     />
                 </div>
             </td>
