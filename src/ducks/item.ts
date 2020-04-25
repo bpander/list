@@ -16,11 +16,20 @@ const initialItemState: ItemState = {
             id: uniqueId(),
             name: 'Milk',
         },
+        {
+            id: uniqueId(),
+            name: 'Eggs',
+        },
+        {
+            id: uniqueId(),
+            name: 'Cream',
+        },
     ],
 };
 
-const { reducer, configureAction } = createSlice(initialItemState, 'ITEM');
+const { reducer, configureAction, update } = createSlice(initialItemState, 'ITEM');
 export const itemReducer = reducer;
+export const updateItems = update;
 
 export const addItem = configureAction<string>(
     'ADD_ITEM',
