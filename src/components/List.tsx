@@ -1,17 +1,17 @@
-import React, { useState, FormEventHandler, useMemo, useRef, Fragment, Ref, useContext, useEffect, useCallback } from 'react';
+import React, { useState, FormEventHandler, useMemo, useRef, Fragment, useContext, useEffect, useCallback } from 'react';
 import { useRootSelector } from 'rootStore';
 import { useDispatch } from 'react-redux';
 import { addItem } from 'ducks/item';
 import { Item } from 'models/Item';
 
-interface SortableListContextValue {
-    isDragging: boolean;
-    setIsDragging: (isDragging: boolean) => void;
-    elementMap: Map<Item, Ref<Element>>;
+interface SortableListContextValue<T> {
+    draggedItem: T | null;
+    setDraggedItem: (item: T) => void;
+    elementMap: Map<T, Element>;
 }
-const SortableListContext = React.createContext<SortableListContextValue>({
-    isDragging: false,
-    setIsDragging: () => {},
+const SortableListContext = React.createContext<SortableListContextValue<any>>({
+    draggedItem: null,
+    setDraggedItem: () => {},
     elementMap: new Map(),
 });
 
@@ -21,22 +21,37 @@ interface SortableListProps<T> {
     keyExtractor: (item: T, index: number) => string | number;
 }
 const SortableList = function<T>(props: SortableListProps<T>) {
-    const [isDragging, setIsDragging] = useState(false);
-    const value = useMemo((): SortableListContextValue => ({
-        isDragging,
-        setIsDragging,
-        elementMap: new Map(),
-    }), [isDragging]);
+    const elementMapRef = useRef(new Map<T, Element>());
+    const [draggedItem, setDraggedItem] = useState<T | null>(null);
+    const value = useMemo((): SortableListContextValue<T> => ({
+        draggedItem,
+        setDraggedItem,
+        elementMap: elementMapRef.current,
+    }), [draggedItem]);
 
-    const mouseRef = useRef([0, 0]);
     useEffect(() => {
+        if (!draggedItem) {
+            return;
+        }
         const onMouseMove = (e: MouseEvent) => {
-            mouseRef.current[0] = e.clientX;
-            mouseRef.current[1] = e.clientY;
+            const index = props.items.findIndex(item => {
+                const element = elementMapRef.current.get(item);
+                if (!element) { return false; }
+                const { top, bottom } = element.getBoundingClientRect();
+                const mid = (bottom + top) / 2;
+                return e.clientY <= mid;
+            });
+            console.log({ index });
+        };
+        const cleanUp = () => {
+            window.removeEventListener('mouseup', cleanUp);
+            window.removeEventListener('mousemove', onMouseMove);
+            setDraggedItem(null);
         };
         window.addEventListener('mousemove', onMouseMove);
-        return () => window.removeEventListener('mousemove', onMouseMove);
-    }, []);
+        window.addEventListener('mouseup', cleanUp);
+        return cleanUp;
+    }, [draggedItem, props.items]);
 
     return (
         <SortableListContext.Provider value={value}>
@@ -53,7 +68,8 @@ const ListItem: React.FC<{ item: Item }> = props => {
     const ref = useRef<HTMLTableRowElement>(null);
     const ctx = useContext(SortableListContext);
     useEffect(() => {
-        ctx.elementMap.set(props.item, ref);
+        if (!ref.current) { return; }
+        ctx.elementMap.set(props.item, ref.current);
         return () => { ctx.elementMap.delete(props.item); };
     }, [ctx.elementMap, props.item]);
 
@@ -68,7 +84,7 @@ const ListItem: React.FC<{ item: Item }> = props => {
                         onMouseDown={e => {
                             e.preventDefault();
                             e.currentTarget.style.background = 'green';
-                            ctx.setIsDragging(true);
+                            ctx.setDraggedItem(props.item);
                         }}
                     />
                 </div>
