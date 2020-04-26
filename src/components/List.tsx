@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { addItem, updateItems, clearCompleted } from 'ducks/item';
 import { Item, ItemStatus } from 'models/Item';
 import { moveTo } from 'lib/moveTo';
+import { toEntries } from 'lib/toEntries';
 
 interface SortableListContextValue<T> {
     draggedItem: T | null;
@@ -173,6 +174,16 @@ export const List: React.FC = () => {
         return items.filter(i => i.status !== ItemStatus.Inactive);
     }, [items]);
 
+    const onSortChange = useCallback((newSortedItems: Item[]) => {
+        const newSortedItemsMap = new Map(toEntries(newSortedItems, i => i.id));
+        dispatch(updateItems({
+            list: [
+                ...items.filter(i => !newSortedItemsMap.has(i.id)),
+                ...newSortedItems,
+            ],
+        }));
+    }, [dispatch, items]);
+
     return (
         <div>
             <div className="vr-3" />
@@ -186,7 +197,7 @@ export const List: React.FC = () => {
                 <tbody>
                     <SortableList
                         items={itemsFiltered}
-                        onChange={onChange}
+                        onChange={onSortChange}
                         keyExtractor={keyExtractor}
                         renderItem={renderItem}
                         renderDropIndicator={renderDropIndicator}

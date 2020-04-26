@@ -1,18 +1,47 @@
-import React from 'react';
-import { Provider } from 'react-redux';
+import React, { useMemo, Fragment } from 'react';
+import { Provider, useDispatch } from 'react-redux';
 
-import { createRootStore } from 'rootStore';
+import { createRootStore, useRootSelector } from 'rootStore';
 import { List } from 'components/List';
 
 import 'styles/index.scss';
+import { RouteName, replace } from 'ducks/router';
+import { History } from 'components/History';
 
 const store = createRootStore();
+
+const NavLink: React.FC<{ to: RouteName }> = props => {
+    const dispatch = useDispatch();
+    const onClick = useMemo((): React.MouseEventHandler => e => {
+        e.preventDefault();
+        dispatch(replace({ routeName: props.to }));
+    }, [dispatch, props.to]);
+    const routeName = useRootSelector(s => s.router.routeName);
+    
+    if (routeName === props.to) {
+        return <Fragment>{props.children}</Fragment>;
+    }
+
+    return <a href={`#${props.to}`} onClick={onClick}>{props.children}</a>;
+};
+
+const AppRouter: React.FC = () => {
+    const routeName = useRootSelector(s => s.router.routeName);
+    switch (routeName) {
+        case RouteName.List: return <List />;
+        case RouteName.History: return <History />;
+    }
+};
 
 function App() {
     return (
         <Provider store={store}>
             <div className="wrapper">
-                <List />
+                <ul>
+                    <li><NavLink to={RouteName.List}>List</NavLink></li>
+                    <li><NavLink to={RouteName.History}>History</NavLink></li>
+                </ul>
+                <AppRouter />
             </div>
         </Provider>
     );

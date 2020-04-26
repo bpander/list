@@ -27,6 +27,11 @@
     align-items: center;
 }
 
+.flex-grow {
+    flex-basis: 0;
+    flex-grow: 1;
+}
+
 .d-block {
     display: block;
 }

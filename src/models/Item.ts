@@ -10,6 +10,7 @@ export interface Item {
     id: string;
     name: string;
     status: ItemStatus;
+    lastAdded: string;
 }
 
 export const createItem = (overrides: Partial<Item> = {}): Item => {
@@ -17,6 +18,7 @@ export const createItem = (overrides: Partial<Item> = {}): Item => {
         id: uniqueId(),
         name: '',
         status: ItemStatus.Active,
+        lastAdded: new Date().toISOString(),
         ...overrides,
     };
 };
