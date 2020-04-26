@@ -19,10 +19,18 @@
     width: 100%;
 }
 
-.flex {
+.d-flex {
     display: flex;
 }
 
 .align-center {
     align-items: center;
 }
+
+.d-block {
+    display: block;
+}
+
+.vr-1 { height: 2px; }
+.vr-2 { height: 4px; }
+.vr-3 { height: 8px; }

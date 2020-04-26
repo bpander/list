@@ -1,6 +1,5 @@
 import { createSlice } from 'lib/createSlice';
-import { Item, createItem } from 'models/Item';
-import { uniqueId } from 'lib/uniqueId';
+import { Item, createItem, ItemStatus } from 'models/Item';
 import { shuffle } from 'lib/shuffle';
 
 interface ItemState {
@@ -9,22 +8,10 @@ interface ItemState {
 
 const initialItemState: ItemState = {
     list: shuffle([
-        {
-            id: uniqueId(),
-            name: 'Bananas',
-        },
-        {
-            id: uniqueId(),
-            name: 'Milk',
-        },
-        {
-            id: uniqueId(),
-            name: 'Eggs',
-        },
-        {
-            id: uniqueId(),
-            name: 'Cream',
-        },
+        createItem({ name: 'Bananas'}),
+        createItem({ name: 'Milk' }),
+        createItem({ name: 'Eggs' }),
+        createItem({ name: 'Cream' }),
     ]),
 };
 
@@ -35,4 +22,16 @@ export const updateItems = update;
 export const addItem = configureAction<string>(
     'ADD_ITEM',
     name => s => ({ ...s, list: [ ...s.list, createItem({ name }) ]}),
+);
+
+export const clearCompleted = configureAction(
+    'CLEAR_COMPLETED',
+    () => s => ({
+        ...s,
+        list: s.list.map(item => {
+            return (item.status === ItemStatus.Completed)
+                ? { ...item, status: ItemStatus.Inactive }
+                : item;
+        }),
+    }),
 );

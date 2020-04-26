@@ -1,8 +1,8 @@
 import React, { useState, FormEventHandler, useMemo, useRef, Fragment, useContext, useEffect, useCallback } from 'react';
 import { useRootSelector } from 'rootStore';
 import { useDispatch } from 'react-redux';
-import { addItem, updateItems } from 'ducks/item';
-import { Item } from 'models/Item';
+import { addItem, updateItems, clearCompleted } from 'ducks/item';
+import { Item, ItemStatus } from 'models/Item';
 import { moveTo } from 'lib/moveTo';
 
 interface SortableListContextValue<T> {
@@ -86,7 +86,7 @@ const SortableList = function<T>(props: SortableListProps<T>) {
     );
 };
 
-const ListItem: React.FC<{ item: Item }> = props => {
+const ListItem: React.FC<{ item: Item; onChange: (item: Item) => void }> = props => {
     const ref = useRef<HTMLTableRowElement>(null);
     const ctx = useContext(SortableListContext);
     useEffect(() => {
@@ -97,10 +97,25 @@ const ListItem: React.FC<{ item: Item }> = props => {
 
     return (
         <tr ref={ref} style={(props.item === ctx.draggedItem) ? { opacity: 0.5 } : {}}>
-            <td className="w-100">{props.item.name}</td>
+            <td
+                className="w-100"
+                style={(props.item.status === ItemStatus.Completed)
+                    ? { textDecoration: 'line-through', opacity: 0.5 }
+                    : undefined
+                }
+            >
+                {props.item.name}
+            </td>
             <td>
-                <div className="flex align-center">
-                    <input type="checkbox" />
+                <div className="d-flex align-center">
+                    <input
+                        type="checkbox"
+                        checked={props.item.status === ItemStatus.Completed}
+                        onChange={e => {
+                            const status = e.currentTarget.checked ? ItemStatus.Completed : ItemStatus.Active;
+                            props.onChange({ ...props.item, status });
+                        }}
+                    />
                     <div
                         style={{ touchAction: 'none', width: 36, height: 36, borderRadius: '50%', background: 'red' }}
                         onMouseDown={e => {
@@ -135,7 +150,15 @@ export const List: React.FC = () => {
         dispatch(updateItems({ list }));
     }, [dispatch]);
 
-    const renderItem = useCallback((item: Item) => <ListItem item={item} />, []);
+    const onItemChange = useCallback((item: Item) => {
+        const index = items.findIndex(i => i.id === item.id);
+        if (index !== -1) {
+            const newItems = [ ...items ];
+            newItems[index] = item;
+            onChange(newItems);
+        }
+    }, [items, onChange]);
+    const renderItem = useCallback((item: Item) => <ListItem item={item} onChange={onItemChange} />, [onItemChange]);
     const renderDropIndicator = useCallback(() => {
         return (
             <tr>
@@ -146,8 +169,13 @@ export const List: React.FC = () => {
         );
     }, []);
 
+    const itemsFiltered = useMemo(() => {
+        return items.filter(i => i.status !== ItemStatus.Inactive);
+    }, [items]);
+
     return (
         <div>
+            <div className="vr-3" />
             <table className="table">
                 <thead>
                     <tr>
@@ -157,7 +185,7 @@ export const List: React.FC = () => {
                 </thead>
                 <tbody>
                     <SortableList
-                        items={items}
+                        items={itemsFiltered}
                         onChange={onChange}
                         keyExtractor={keyExtractor}
                         renderItem={renderItem}
@@ -167,7 +195,9 @@ export const List: React.FC = () => {
             </table>
             <form onSubmit={onSubmit}>
                 <input type="text" value={stagedItem} onChange={e => setStagedItem(e.currentTarget.value)} />
+                <button type="submit">+</button>
             </form>
+            <button onClick={() => dispatch(clearCompleted(undefined))}>Clear Completed</button>
         </div>
     );
 };
