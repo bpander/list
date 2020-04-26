@@ -108,7 +108,7 @@ const ListItem: React.FC<{ item: Item; onChange: (item: Item) => void }> = props
                 {props.item.name}
             </td>
             <td>
-                <div className="d-flex align-center">
+                <div className="d-flex align-center justify-space-between">
                     <input
                         type="checkbox"
                         checked={props.item.status === ItemStatus.Completed}
@@ -118,13 +118,13 @@ const ListItem: React.FC<{ item: Item; onChange: (item: Item) => void }> = props
                         }}
                     />
                     <div
-                        style={{ touchAction: 'none', width: 36, height: 36, borderRadius: '50%', background: 'red' }}
+                        style={{ touchAction: 'none', fontWeight: 'bold', fontSize: 24, cursor: 'grab', padding: 4 }}
                         onMouseDown={e => {
                             e.preventDefault();
                             ctx.setDraggedItem(props.item);
                         }}
                         onTouchStart={() => ctx.setDraggedItem(props.item)}
-                    />
+                    >⋮⋮</div>
                 </div>
             </td>
         </tr>

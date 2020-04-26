@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useRootSelector } from 'rootStore';
 import { Item, ItemStatus } from 'models/Item';
 import { useDispatch } from 'react-redux';
-import { updateItems, activateItem } from 'ducks/item';
+import { updateItems, activateItem, deleteItem } from 'ducks/item';
 
 interface SortOption {
     facet: keyof Item;
@@ -10,8 +10,8 @@ interface SortOption {
 }
 
 const sortOptions: SortOption[] = [
-    { facet: 'name', label: 'Name' },
     { facet: 'lastAdded', label: 'Last Added' },
+    { facet: 'name', label: 'Name' },
 ];
 
 const evaluator = (key: keyof Item) => (a: Item, b: Item) => {
@@ -59,6 +59,9 @@ export const History: React.FC = () => {
                                 {item.name}
                             </span>
                             <button onClick={() => dispatch(activateItem(item))}>Add to list</button>
+                            <button onClick={() => dispatch(deleteItem(item))} style={{ color: 'red' }}>
+                                Delete
+                            </button>
                         </div>
                     </li>
                 ))}

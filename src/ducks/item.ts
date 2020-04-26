@@ -8,13 +8,7 @@ interface ItemState {
 }
 
 const initialItemState: ItemState = {
-    list: [
-        createItem({ name: 'Cream', lastAdded: '2020-04-22T17:10:05.998Z' }),
-        createItem({ name: 'Bananas', lastAdded: '2020-04-23T17:10:05.998Z' }),
-        createItem({ name: 'Milk', lastAdded: '2020-04-24T17:10:05.998Z', status: ItemStatus.Inactive }),
-        createItem({ name: 'Snacks', lastAdded: '2020-04-25T17:10:05.998Z', status: ItemStatus.Inactive }),
-        createItem({ name: 'Eggs', lastAdded: '2020-04-26T17:10:05.998Z' }),
-    ],
+    list: [],
     sortHistoryBy: 'lastAdded',
 };
 
@@ -37,6 +31,11 @@ export const activateItem = configureAction<Item>(
             lastAdded: new Date().toISOString(),
         }),
     }),
+);
+
+export const deleteItem = configureAction<Item>(
+    'DELETE_ITEM',
+    item => s => ({ ...s, list: removeFirst(s.list, item) }),
 );
 
 export const clearCompleted = configureAction(

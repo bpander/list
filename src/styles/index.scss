@@ -27,6 +27,10 @@
     align-items: center;
 }
 
+.justify-space-between {
+    justify-content: space-between;
+}
+
 .flex-grow {
     flex-basis: 0;
     flex-grow: 1;
