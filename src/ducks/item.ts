@@ -11,8 +11,8 @@ const initialItemState: ItemState = {
     list: [
         createItem({ name: 'Cream', lastAdded: '2020-04-22T17:10:05.998Z' }),
         createItem({ name: 'Bananas', lastAdded: '2020-04-23T17:10:05.998Z' }),
-        createItem({ name: 'Snacks', lastAdded: '2020-04-24T17:10:05.998Z', status: ItemStatus.Inactive }),
-        createItem({ name: 'Milk', lastAdded: '2020-04-25T17:10:05.998Z', status: ItemStatus.Inactive }),
+        createItem({ name: 'Milk', lastAdded: '2020-04-24T17:10:05.998Z', status: ItemStatus.Inactive }),
+        createItem({ name: 'Snacks', lastAdded: '2020-04-25T17:10:05.998Z', status: ItemStatus.Inactive }),
         createItem({ name: 'Eggs', lastAdded: '2020-04-26T17:10:05.998Z' }),
     ],
     sortHistoryBy: 'lastAdded',
@@ -29,7 +29,14 @@ export const addItem = configureAction<string>(
 
 export const activateItem = configureAction<Item>(
     'ACTIVATE_ITEM',
-    item => s => ({ ...s, list: removeFirst(s.list, item, { ...item, status: ItemStatus.Active })}),
+    item => s => ({
+        ...s,
+        list: removeFirst(s.list, item, {
+            ...item,
+            status: ItemStatus.Active,
+            lastAdded: new Date().toISOString(),
+        }),
+    }),
 );
 
 export const clearCompleted = configureAction(

@@ -17,7 +17,7 @@ const sortOptions: SortOption[] = [
 const evaluator = (key: keyof Item) => (a: Item, b: Item) => {
     switch (key) {
         case 'name': return a.name.localeCompare(b.name);
-        case 'lastAdded': return Date.parse(a.lastAdded) - Date.parse(b.lastAdded);
+        case 'lastAdded': return Date.parse(b.lastAdded) - Date.parse(a.lastAdded);
         default: return 0;
     }
 }
