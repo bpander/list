@@ -2,7 +2,6 @@ import { createSlice } from 'lib/createSlice';
 
 export enum RouteName {
     List = 'List',
-    History = 'History',
 }
 
 export interface RouterState {

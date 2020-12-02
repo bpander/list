@@ -3,7 +3,6 @@ import { uniqueId } from 'lib/uniqueId'
 export enum ItemStatus {
     Active = 'Active',
     Completed = 'Completed',
-    Inactive = 'Inactive',
 }
 
 export interface Item {

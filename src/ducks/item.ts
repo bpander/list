@@ -42,10 +42,6 @@ export const clearCompleted = configureAction(
     'CLEAR_COMPLETED',
     () => s => ({
         ...s,
-        list: s.list.map(item => {
-            return (item.status === ItemStatus.Completed)
-                ? { ...item, status: ItemStatus.Inactive }
-                : item;
-        }),
+        list: s.list.filter(item => item.status === ItemStatus.Active),
     }),
 );

@@ -6,7 +6,6 @@ import { List } from 'components/List';
 
 import 'styles/index.scss';
 import { RouteName, replace } from 'ducks/router';
-import { History } from 'components/History';
 
 const store = createRootStore();
 
@@ -29,7 +28,6 @@ const AppRouter: React.FC = () => {
     const routeName = useRootSelector(s => s.router.routeName);
     switch (routeName) {
         case RouteName.List: return <List />;
-        case RouteName.History: return <History />;
     }
 };
 
@@ -39,7 +37,6 @@ function App() {
             <div className="wrapper">
                 <ul>
                     <li><NavLink to={RouteName.List}>List</NavLink></li>
-                    <li><NavLink to={RouteName.History}>History</NavLink></li>
                 </ul>
                 <AppRouter />
             </div>

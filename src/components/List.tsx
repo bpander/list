@@ -170,10 +170,6 @@ export const List: React.FC = () => {
         );
     }, []);
 
-    const itemsFiltered = useMemo(() => {
-        return items.filter(i => i.status !== ItemStatus.Inactive);
-    }, [items]);
-
     const onSortChange = useCallback((newSortedItems: Item[]) => {
         const newSortedItemsMap = new Map(toEntries(newSortedItems, i => i.id));
         dispatch(updateItems({
@@ -196,7 +192,7 @@ export const List: React.FC = () => {
                 </thead>
                 <tbody>
                     <SortableList
-                        items={itemsFiltered}
+                        items={items}
                         onChange={onSortChange}
                         keyExtractor={keyExtractor}
                         renderItem={renderItem}
