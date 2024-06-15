@@ -145,13 +145,15 @@ export const List: React.FC = () => {
   const items = useRootSelector(s => s.item.list)
   const [stagedItem, setStagedItem] = useState('')
 
-  const onSubmit = useMemo((): FormEventHandler => e => {
+  const onSubmit = useMemo((): FormEventHandler => async (e) => {
     e.preventDefault()
     const stagedItemSanitized = stagedItem.trim()
     if (stagedItemSanitized) {
       dispatch(addItem(stagedItemSanitized))
       setStagedItem('')
     }
+    await Promise.resolve()
+    window.scrollTo(0, document.body.scrollHeight)
   }, [dispatch, stagedItem])
 
   const onChange = useCallback((list: Item[]) => {
