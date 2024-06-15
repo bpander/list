@@ -1,6 +1,6 @@
 
 .list__footer {
-  position: sticky;
+  position: fixed;
   bottom: 0;
   width: 100%;
   left: 0;

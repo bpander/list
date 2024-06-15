@@ -6,6 +6,8 @@ import { moveTo } from 'lib/moveTo'
 import { toEntries } from 'lib/toEntries'
 import './List.css'
 
+const FOOTER_HEIGHT = 116
+
 interface SortableListContextValue<T> {
   draggedItem: T | null
   setDraggedItem: (item: T) => void
@@ -152,8 +154,8 @@ export const List: React.FC = () => {
       dispatch(addItem(stagedItemSanitized))
       setStagedItem('')
     }
-    await Promise.resolve()
-    window.scrollTo(0, document.body.scrollHeight)
+    await new Promise(r => setTimeout(r, 16))
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
   }, [dispatch, stagedItem])
 
   const onChange = useCallback((list: Item[]) => {
@@ -191,8 +193,8 @@ export const List: React.FC = () => {
 
   return (
     <>
-      <main className="wrapper flex items-end grow">
-        <div className='w-full pb-8'>
+      <main className="wrapper flex items-center grow" style={{ paddingBottom: FOOTER_HEIGHT }}>
+        <div className='w-full pb-8 relative'>
           <table className="table">
             <thead>
               <tr>
@@ -211,12 +213,12 @@ export const List: React.FC = () => {
             </tbody>
           </table>
           {!items.length && (
-            <div className='text-center opacity-50 py-3'>List is empty</div>
+            <div className='text-center opacity-50 py-3 absolute w-full'>List is empty</div>
           )}
         </div>
       </main>
       <footer className='list__footer'>
-        <div className='wrapper'>
+        <div className='wrapper flex flex-col' style={{ height: FOOTER_HEIGHT }}>
           <div className='flex'>
             <div className='w-1/2'>
               <button className='button w-full' onClick={() => dispatch(clearAll(undefined))}>
@@ -230,7 +232,7 @@ export const List: React.FC = () => {
             </div>
           </div>
 
-          <form onSubmit={onSubmit} className='flex py-4'>
+          <form onSubmit={onSubmit} className='flex grow items-center'>
             <input
               type="text"
               value={stagedItem}

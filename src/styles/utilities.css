@@ -26,8 +26,9 @@
 
 .flex { display: flex; }
 
+.flex-col { flex-direction: column; }
+
 .items-center { align-items: center; }
-.items-end { align-items: flex-end; }
 
 .grow { flex-grow: 1; }
 
@@ -71,3 +72,6 @@
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
+
+.absolute { position: absolute; }
+.relative { position: relative; }
