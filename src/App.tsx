@@ -32,12 +32,13 @@ const AppRouter: React.FC = () => {
 function App() {
     return (
         <Provider store={store}>
-            <div className="wrapper text-xl">
-                <h1 className="text-center m-0 py-4 text-2xl">
+            <div className="wrapper py-4 flex items-baseline">
+                <h1 className="m-0 text-2xl">
                     <NavLink to={RouteName.List}>
                         List
                     </NavLink>
                 </h1>
+                <div className='text-sm ml-1.5'>v{process.env.REACT_APP_VERSION}</div>
             </div>
             <AppRouter />
         </Provider>

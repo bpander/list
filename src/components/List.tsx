@@ -105,6 +105,7 @@ const ListItem: React.FC<{ item: Item; onChange: (item: Item) => void }> = props
   return (
     <tr ref={ref} style={(props.item === ctx.draggedItem) ? { opacity: 0.5 } : {}}>
       <td
+        className='text-xl'
         style={(props.item.status === ItemStatus.Completed)
           ? { textDecoration: 'line-through', opacity: 0.5 }
           : undefined
@@ -146,6 +147,7 @@ export const List: React.FC = () => {
   const dispatch = useRootDispatch()
   const items = useRootSelector(s => s.item.list)
   const [stagedItem, setStagedItem] = useState('')
+  const mainRef = useRef<HTMLElement>(null)
 
   const onSubmit = useMemo((): FormEventHandler => async (e) => {
     e.preventDefault()
@@ -155,7 +157,7 @@ export const List: React.FC = () => {
       setStagedItem('')
     }
     await new Promise(r => setTimeout(r, 16))
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+    mainRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
   }, [dispatch, stagedItem])
 
   const onChange = useCallback((list: Item[]) => {
@@ -193,7 +195,7 @@ export const List: React.FC = () => {
 
   return (
     <>
-      <main className="wrapper flex items-center grow" style={{ paddingBottom: FOOTER_HEIGHT }}>
+      <main ref={mainRef} className="wrapper flex items-center grow" style={{ paddingBottom: FOOTER_HEIGHT }}>
         <div className='w-full pb-8 relative'>
           <table className="table">
             <thead>
