@@ -1,6 +1,6 @@
-import { combineReducers, Reducer, createStore, applyMiddleware } from 'redux';
+import { combineReducers, Reducer, createStore, applyMiddleware, AnyAction, Dispatch } from 'redux';
 import { itemReducer } from 'ducks/item';
-import { TypedUseSelectorHook, useSelector } from 'react-redux';
+import { TypedUseSelectorHook, UseDispatch, useDispatch, useSelector } from 'react-redux';
 import { routerReducer } from 'ducks/router';
 import { persistState } from 'lib/persistState';
 import { createLocalStorageService } from 'lib/storage-service/LocalStorageService';
@@ -15,6 +15,7 @@ type ExtractState<TReducer> = TReducer extends Reducer<infer S> ? S : never;
 export type RootState = ExtractState<typeof rootReducer>;
 
 export const useRootSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useRootDispatch: UseDispatch<Dispatch<AnyAction>> = useDispatch
 
 export const rootL = makeLens<RootState>();
 

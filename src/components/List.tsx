@@ -1,6 +1,5 @@
 import React, { useState, FormEventHandler, useMemo, useRef, Fragment, useContext, useEffect, useCallback } from 'react';
-import { useRootSelector } from 'rootStore';
-import { useDispatch } from 'react-redux';
+import { useRootDispatch, useRootSelector } from 'rootStore';
 import { addItem, updateItems, clearCompleted } from 'ducks/item';
 import { Item, ItemStatus } from 'models/Item';
 import { moveTo } from 'lib/moveTo';
@@ -134,7 +133,7 @@ const ListItem: React.FC<{ item: Item; onChange: (item: Item) => void }> = props
 const keyExtractor = (item: Item) => item.id;
 
 export const List: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useRootDispatch();
     const items = useRootSelector(s => s.item.list);
     const [stagedItem, setStagedItem] = useState('');
 

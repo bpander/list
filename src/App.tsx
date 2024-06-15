@@ -1,16 +1,16 @@
-import React, { useMemo, Fragment } from 'react';
-import { Provider, useDispatch } from 'react-redux';
+import React, { useMemo, Fragment, PropsWithChildren } from 'react';
+import { Provider } from 'react-redux';
 
-import { createRootStore, useRootSelector } from 'rootStore';
+import { createRootStore, useRootDispatch, useRootSelector } from 'rootStore';
 import { List } from 'components/List';
 
-import 'styles/index.scss';
+import 'styles/index.css';
 import { RouteName, replace } from 'ducks/router';
 
 const store = createRootStore();
 
-const NavLink: React.FC<{ to: RouteName }> = props => {
-    const dispatch = useDispatch();
+const NavLink: React.FC<PropsWithChildren<{ to: RouteName }>> = props => {
+    const dispatch = useRootDispatch();
     const onClick = useMemo((): React.MouseEventHandler => e => {
         e.preventDefault();
         dispatch(replace({ routeName: props.to }));
@@ -35,9 +35,11 @@ function App() {
     return (
         <Provider store={store}>
             <div className="wrapper">
-                <ul>
-                    <li><NavLink to={RouteName.List}>List</NavLink></li>
-                </ul>
+                <h1>
+                    <NavLink to={RouteName.List}>
+                        List
+                    </NavLink>
+                </h1>
                 <AppRouter />
             </div>
         </Provider>
