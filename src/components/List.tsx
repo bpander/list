@@ -4,9 +4,10 @@ import { addItem, updateItems, clearCompleted, clearAll } from 'ducks/item'
 import { Item, ItemStatus } from 'models/Item'
 import { moveTo } from 'lib/moveTo'
 import { toEntries } from 'lib/toEntries'
+import { AddIcon } from 'icons/AddIcon'
 import './List.css'
 
-const FOOTER_HEIGHT = 116
+const FOOTER_HEIGHT = 128
 
 interface SortableListContextValue<T> {
   draggedItem: T | null
@@ -220,29 +221,34 @@ export const List: React.FC = () => {
         </div>
       </main>
       <footer className='list__footer'>
-        <div className='wrapper flex flex-col' style={{ height: FOOTER_HEIGHT }}>
+        <div className='wrapper' style={{ height: FOOTER_HEIGHT }}>
           <div className='flex'>
             <div className='w-1/2'>
-              <button className='button w-full' onClick={() => dispatch(clearAll(undefined))}>
+              <button className='button w-full rounded-bl' onClick={() => dispatch(clearAll(undefined))}>
                 Clear All
               </button>
             </div>
             <div className='w-1/2'>
-              <button className='button w-full' onClick={() => dispatch(clearCompleted(undefined))}>
+              <button className='button w-full rounded-br' onClick={() => dispatch(clearCompleted(undefined))}>
                 Clear Completed
               </button>
             </div>
           </div>
 
-          <form onSubmit={onSubmit} className='flex grow items-center'>
-            <input
-              type="text"
-              value={stagedItem}
-              onChange={e => setStagedItem(e.currentTarget.value)}
-              className='input w-full rounded-r-none'
-            />
+          <form onSubmit={onSubmit} className='pt-4 flex'>
+            <label className='flex flex-col w-full'>
+              <span className='sr-only'>Item</span>
+              <input
+                type="text"
+                value={stagedItem}
+                onChange={e => setStagedItem(e.currentTarget.value)}
+                className='input w-full rounded-r-none'
+              />
+            </label>
 
-            <button className='button' type="submit">+</button>
+            <button type="submit" className='button rounded-r'>
+              <AddIcon />
+            </button>
           </form>
         </div>
       </footer>
