@@ -27,6 +27,7 @@
 .flex { display: flex; }
 
 .items-center { align-items: center; }
+.items-end { align-items: flex-end; }
 
 .grow { flex-grow: 1; }
 
@@ -35,6 +36,10 @@
 
 .p-0 { padding: 0; }
 .p-1 { padding: 0.25rem; }
+.py-3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
 .py-4 {
     padding-top: 1rem;
     padding-bottom: 1rem;

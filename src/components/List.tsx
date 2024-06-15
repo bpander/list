@@ -189,7 +189,7 @@ export const List: React.FC = () => {
 
   return (
     <>
-      <main className="wrapper flex items-center grow">
+      <main className="wrapper flex items-end grow">
         <div className='w-full pb-8'>
           <table className="table">
             <thead>
@@ -209,7 +209,7 @@ export const List: React.FC = () => {
             </tbody>
           </table>
           {!items.length && (
-            <div className='text-center opacity-50 py-4'>List is empty</div>
+            <div className='text-center opacity-50 py-3'>List is empty</div>
           )}
         </div>
       </main>

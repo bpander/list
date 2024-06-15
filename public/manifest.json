@@ -1,6 +1,6 @@
 {
   "short_name": "List",
-  "name": "Simple, installable, offline list app",
+  "name": "Simple offline list app",
   "icons": [
     {
       "src": "favicon.ico",
