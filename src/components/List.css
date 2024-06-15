@@ -1,0 +1,9 @@
+
+.list__footer {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  background: #333;
+  color: rgb(255 255 255 / 0.9);
+}

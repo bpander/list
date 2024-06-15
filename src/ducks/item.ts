@@ -38,6 +38,11 @@ export const deleteItem = configureAction<Item>(
     item => s => ({ ...s, list: removeFirst(s.list, item) }),
 );
 
+export const clearAll = configureAction(
+    'CLEAR_ALL',
+    () => s => ({ ...s, list: [] }),
+);
+
 export const clearCompleted = configureAction(
     'CLEAR_COMPLETED',
     () => s => ({

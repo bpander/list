@@ -3,8 +3,6 @@ import { Provider } from 'react-redux';
 
 import { createRootStore, useRootDispatch, useRootSelector } from 'rootStore';
 import { List } from 'components/List';
-
-import 'styles/index.css';
 import { RouteName, replace } from 'ducks/router';
 
 const store = createRootStore();
@@ -34,14 +32,14 @@ const AppRouter: React.FC = () => {
 function App() {
     return (
         <Provider store={store}>
-            <div className="wrapper">
-                <h1>
+            <div className="wrapper text-xl">
+                <h1 className="text-center m-0 py-4 text-2xl">
                     <NavLink to={RouteName.List}>
                         List
                     </NavLink>
                 </h1>
-                <AppRouter />
             </div>
+            <AppRouter />
         </Provider>
     );
 };
