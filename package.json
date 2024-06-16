@@ -1,6 +1,6 @@
 {
   "name": "list",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "homepage": "https://bpander.github.io/list",
   "dependencies": {

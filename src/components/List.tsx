@@ -262,6 +262,9 @@ export const List: React.FC = () => {
           onClick={() => setExpanded(!expanded)}
           className={`fab button rounded-full absolute right-8 bottom-0 transition-transform ease-out p-3 ${expanded ? '-translate-y-8' : ''}`}
         >
+          <span className='sr-only'>
+            {expanded ? 'Collapse' : 'Add new item'}
+          </span>
           <span className='pointer-events-none'>
             {expanded ? (
               <KeyboardArrowDownIcon />
