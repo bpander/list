@@ -257,10 +257,10 @@ export const List: React.FC = () => {
           )}
         </div>
       </main>
-      <div className='wrapper sticky bottom-12'>
+      <div className='wrapper sticky bottom-16'>
         <button
           onClick={() => setExpanded(!expanded)}
-          className={`fab button rounded-full absolute right-8 bottom-0 transition-transform ease-out p-3 ${expanded ? '-translate-y-8' : ''}`}
+          className={`fab button rounded-full absolute right-10 bottom-0 transition-transform ease-out p-3 ${expanded ? '-translate-y-4' : ''}`}
         >
           <span className='sr-only'>
             {expanded ? 'Collapse' : 'Add new item'}
@@ -292,7 +292,7 @@ export const List: React.FC = () => {
             </label>
 
             <div>
-              <button type="submit" className='button rounded-r'>
+              <button type="submit" className='button rounded-r px-4' onClick={() => inputRef.current?.focus()}>
                 <ArrowForwardIcon />
               </button>
             </div>
