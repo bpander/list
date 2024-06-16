@@ -114,26 +114,24 @@ const ListItem: React.FC<{ item: Item; onChange: (item: Item) => void }> = props
           : undefined
         }
       >
-        {props.item.name}
+        <label htmlFor={`checkbox_${props.item.id}`} className='block'>
+          {props.item.name}
+        </label>
       </td>
       <td>
         <div className="flex items-center justify-end">
-          <label>
-            <span className='sr-only'>
-              Toggle completed
-            </span>
-            <input
-              type="checkbox"
-              checked={props.item.status === ItemStatus.Completed}
-              onChange={e => {
-                const status = e.currentTarget.checked ? ItemStatus.Completed : ItemStatus.Active
-                props.onChange({ ...props.item, status })
-              }}
-              className='checkbox mr-1'
-            />
-          </label>
+          <input
+            type="checkbox"
+            checked={props.item.status === ItemStatus.Completed}
+            id={`checkbox_${props.item.id}`}
+            onChange={e => {
+              const status = e.currentTarget.checked ? ItemStatus.Completed : ItemStatus.Active
+              props.onChange({ ...props.item, status })
+            }}
+            className='checkbox mr-0.5'
+          />
           <div
-            className={`p-0.5 touch-none ${!ctx.draggedItem ? 'cursor-grab' : ''}`}
+            className={`p-1 touch-none ${!ctx.draggedItem ? 'cursor-grab' : ''}`}
             onMouseDown={e => {
               e.preventDefault()
               ctx.setDraggedItem(props.item)
@@ -300,7 +298,12 @@ export const List: React.FC = () => {
             </label>
 
             <div>
-              <button type="submit" className='button rounded-r px-4' onClick={() => inputRef.current?.focus()}>
+              <button
+                type="submit"
+                className='button rounded-r px-4'
+                onTouchEnd={onSubmit}
+                onMouseUp={() => inputRef.current?.focus()}
+              >
                 <ArrowForwardIcon />
               </button>
             </div>
