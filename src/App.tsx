@@ -33,7 +33,7 @@ function App() {
     return (
         <Provider store={store}>
             <div className="wrapper py-4 flex items-baseline">
-                <h1 className="m-0 text-2xl">
+                <h1 className="m-0 text-2xl font-bold">
                     <NavLink to={RouteName.List}>
                         List
                     </NavLink>

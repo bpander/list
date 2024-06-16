@@ -5,9 +5,10 @@ import { Item, ItemStatus } from 'models/Item'
 import { moveTo } from 'lib/moveTo'
 import { toEntries } from 'lib/toEntries'
 import { AddIcon } from 'icons/AddIcon'
-import './List.css'
+import { ArrowForwardIcon } from 'icons/ArrowForwardIcon'
+import { KeyboardArrowDownIcon } from 'icons/KeyboardArrowDownIcon'
 
-const FOOTER_HEIGHT = 128
+const FOOTER_HEIGHT = 74
 
 interface SortableListContextValue<T> {
   draggedItem: T | null
@@ -147,8 +148,25 @@ const keyExtractor = (item: Item) => item.id
 export const List: React.FC = () => {
   const dispatch = useRootDispatch()
   const items = useRootSelector(s => s.item.list)
+
   const [stagedItem, setStagedItem] = useState('')
+  const [expanded, setExpanded] = useState(false)
+
   const mainRef = useRef<HTMLElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (!expanded) return
+    inputRef.current?.focus()
+    const clickAwayListener = (e: MouseEvent) => {
+      if (e.target instanceof Element && (e.target.closest('.list__footer') || e.target.closest('.fab'))) {
+        return
+      }
+      setExpanded(false)
+    }
+    window.addEventListener('click', clickAwayListener)
+    return () => window.removeEventListener('click', clickAwayListener)
+  }, [expanded])
 
   const onSubmit = useMemo((): FormEventHandler => async (e) => {
     e.preventDefault()
@@ -197,7 +215,7 @@ export const List: React.FC = () => {
   return (
     <>
       <main ref={mainRef} className="wrapper flex items-center grow" style={{ paddingBottom: FOOTER_HEIGHT }}>
-        <div className='w-full pb-8 relative'>
+        <div className='w-full pb-8'>
           <table className="table">
             <thead>
               <tr>
@@ -215,30 +233,54 @@ export const List: React.FC = () => {
               />
             </tbody>
           </table>
-          {!items.length && (
-            <div className='text-center opacity-50 py-3 absolute w-full'>List is empty</div>
+          {!items.length ? (
+            <div className='text-center opacity-50 py-2'>List is empty</div>
+          ) : (
+            <div className='flex -m-0.5 pt-4'>
+              <div className='w-1/2 p-0.5'>
+                <button
+                  className='button w-full'
+                  onClick={() => dispatch(clearAll(undefined))}
+                >
+                  Clear All
+                </button>
+              </div>
+              <div className='w-1/2 p-0.5'>
+                <button
+                  className='button w-full'
+                  onClick={() => dispatch(clearCompleted(undefined))}
+                >
+                  Clear Completed
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </main>
-      <footer className='list__footer'>
+      <div className='wrapper sticky bottom-12'>
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className={`fab button rounded-full absolute right-8 bottom-0 transition-transform ease-out p-3 ${expanded ? '-translate-y-8' : ''}`}
+        >
+          <span className='pointer-events-none'>
+            {expanded ? (
+              <KeyboardArrowDownIcon />
+            ) : (
+              <AddIcon />
+            )}
+          </span>
+        </button>
+      </div>
+      <footer
+        className={`list__footer transition-transform ease-out ${expanded ? 'expanded' : ''}`}
+        aria-hidden={!expanded}
+      >
         <div className='wrapper' style={{ height: FOOTER_HEIGHT }}>
-          <div className='flex'>
-            <div className='w-1/2'>
-              <button className='button w-full rounded-bl' onClick={() => dispatch(clearAll(undefined))}>
-                Clear All
-              </button>
-            </div>
-            <div className='w-1/2'>
-              <button className='button w-full rounded-br' onClick={() => dispatch(clearCompleted(undefined))}>
-                Clear Completed
-              </button>
-            </div>
-          </div>
-
           <form onSubmit={onSubmit} className='pt-4 flex'>
             <label className='flex flex-col w-full'>
               <span className='sr-only'>Item</span>
               <input
+                ref={inputRef}
                 type="text"
                 value={stagedItem}
                 onChange={e => setStagedItem(e.currentTarget.value)}
@@ -246,9 +288,11 @@ export const List: React.FC = () => {
               />
             </label>
 
-            <button type="submit" className='button rounded-r'>
-              <AddIcon />
-            </button>
+            <div>
+              <button type="submit" className='button rounded-r'>
+                <ArrowForwardIcon />
+              </button>
+            </div>
           </form>
         </div>
       </footer>
