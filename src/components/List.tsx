@@ -7,6 +7,7 @@ import { toEntries } from 'lib/toEntries'
 import { AddIcon } from 'icons/AddIcon'
 import { ArrowForwardIcon } from 'icons/ArrowForwardIcon'
 import { KeyboardArrowDownIcon } from 'icons/KeyboardArrowDownIcon'
+import { DragIndicatorIcon } from 'icons/DragIndicatorIcon'
 
 const FOOTER_HEIGHT = 74
 
@@ -107,7 +108,7 @@ const ListItem: React.FC<{ item: Item; onChange: (item: Item) => void }> = props
   return (
     <tr ref={ref} style={(props.item === ctx.draggedItem) ? { opacity: 0.5 } : {}}>
       <td
-        className='text-xl'
+        className='text-xl py-1.5'
         style={(props.item.status === ItemStatus.Completed)
           ? { textDecoration: 'line-through', opacity: 0.5 }
           : undefined
@@ -116,27 +117,31 @@ const ListItem: React.FC<{ item: Item; onChange: (item: Item) => void }> = props
         {props.item.name}
       </td>
       <td>
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            checked={props.item.status === ItemStatus.Completed}
-            onChange={e => {
-              const status = e.currentTarget.checked ? ItemStatus.Completed : ItemStatus.Active
-              props.onChange({ ...props.item, status })
-            }}
-            className='checkbox mr-2'
-          />
+        <div className="flex items-center justify-end">
+          <label>
+            <span className='sr-only'>
+              Toggle completed
+            </span>
+            <input
+              type="checkbox"
+              checked={props.item.status === ItemStatus.Completed}
+              onChange={e => {
+                const status = e.currentTarget.checked ? ItemStatus.Completed : ItemStatus.Active
+                props.onChange({ ...props.item, status })
+              }}
+              className='checkbox mr-1'
+            />
+          </label>
           <div
-            className={[
-              'font-bold p-1 touch-none text-2xl',
-              !ctx.draggedItem && 'cursor-grab',
-            ].join(' ')}
+            className={`p-0.5 touch-none ${!ctx.draggedItem ? 'cursor-grab' : ''}`}
             onMouseDown={e => {
               e.preventDefault()
               ctx.setDraggedItem(props.item)
             }}
             onTouchStart={() => ctx.setDraggedItem(props.item)}
-          >⋮⋮</div>
+          >
+            <DragIndicatorIcon />
+          </div>
         </div>
       </td>
     </tr>
@@ -233,28 +238,31 @@ export const List: React.FC = () => {
               />
             </tbody>
           </table>
-          {!items.length ? (
-            <div className='text-center opacity-50 py-2'>List is empty</div>
-          ) : (
-            <div className='flex -m-0.5 pt-4'>
-              <div className='w-1/2 p-0.5'>
-                <button
-                  className='button w-full'
-                  onClick={() => dispatch(clearAll(undefined))}
-                >
-                  Clear All
-                </button>
-              </div>
-              <div className='w-1/2 p-0.5'>
-                <button
-                  className='button w-full'
-                  onClick={() => dispatch(clearCompleted(undefined))}
-                >
-                  Clear Completed
-                </button>
-              </div>
+          {!items.length && (
+            <div className='text-center opacity-50 py-2 border-b border-transparent'>
+              List is empty
             </div>
           )}
+          <div className='flex -m-0.5 pt-4'>
+            <div className='w-1/2 p-0.5'>
+              <button
+                className='button w-full'
+                onClick={() => dispatch(clearAll(undefined))}
+                disabled={!items.length}
+              >
+                Clear All
+              </button>
+            </div>
+            <div className='w-1/2 p-0.5'>
+              <button
+                className='button w-full'
+                onClick={() => dispatch(clearCompleted(undefined))}
+                disabled={!items.length}
+              >
+                Clear Completed
+              </button>
+            </div>
+          </div>
         </div>
       </main>
       <div className='wrapper sticky bottom-16'>
