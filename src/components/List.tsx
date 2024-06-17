@@ -162,7 +162,7 @@ export const List: React.FC = () => {
     if (!expanded) return
     inputRef.current?.focus()
     const clickAwayListener = (e: MouseEvent) => {
-      if (e.target instanceof Element && (e.target.closest('.list__footer') || e.target.closest('.fab'))) {
+      if (e.target instanceof Element && (e.target.closest('.list__footer') || e.target.closest('.expander'))) {
         return
       }
       setExpanded(false)
@@ -237,8 +237,17 @@ export const List: React.FC = () => {
             </tbody>
           </table>
           {!items.length && (
-            <div className='text-center opacity-50 py-2 border-b border-transparent'>
-              List is empty
+            <div className='text-center py-2 border-b border-transparent'>
+              <span className='opacity-60'>List is empty. </span>
+              <button
+                className='expander underline'
+                onClick={() => {
+                  setExpanded(true)
+                  inputRef.current?.focus()
+                }}
+              >
+                Start adding
+              </button>.
             </div>
           )}
           <div className='flex -m-0.5 pt-4'>
@@ -263,22 +272,24 @@ export const List: React.FC = () => {
           </div>
         </div>
       </main>
-      <div className='wrapper sticky bottom-16'>
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className={`fab button rounded-full absolute right-10 bottom-0 transition-transform ease-out p-3 ${expanded ? '-translate-y-4' : ''}`}
-        >
-          <span className='sr-only'>
-            {expanded ? 'Collapse' : 'Add new item'}
-          </span>
-          <span className='pointer-events-none'>
-            {expanded ? (
-              <KeyboardArrowDownIcon />
-            ) : (
-              <AddIcon />
-            )}
-          </span>
-        </button>
+      <div className='fixed bottom-24 inset-x-0'>
+        <div className={`wrapper transition-transform ease-out ${expanded ? 'translate-x-[calc(50%-74px)] translate-y-4' : ''}`}>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className='expander button rounded-full absolute left-1/2 -translate-x-1/2 bottom-0 p-3'
+          >
+            <span className='sr-only'>
+              {expanded ? 'Collapse' : 'Add new item'}
+            </span>
+            <span className='pointer-events-none'>
+              {expanded ? (
+                <KeyboardArrowDownIcon />
+              ) : (
+                <AddIcon />
+              )}
+            </span>
+          </button>
+        </div>
       </div>
       <footer
         className={`list__footer transition-transform ease-out ${expanded ? 'expanded' : ''}`}
