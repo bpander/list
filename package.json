@@ -1,6 +1,6 @@
 {
   "name": "list",
-  "version": "0.2.2-rc2",
+  "version": "0.2.2",
   "private": true,
   "homepage": "https://bpander.github.io/list",
   "dependencies": {
@@ -38,7 +38,7 @@
     "eject": "react-scripts eject",
     "lint": "npx eslint \"src/**/*.{tsx,ts}\" --fix",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build -m 'Auto-generated commit'"
   },
   "eslintConfig": {
     "extends": [
