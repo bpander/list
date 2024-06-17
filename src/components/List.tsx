@@ -272,8 +272,8 @@ export const List: React.FC = () => {
           </div>
         </div>
       </main>
-      <div className='fixed bottom-24 inset-x-0'>
-        <div className={`wrapper transition-transform ease-out ${expanded ? 'translate-x-[calc(50%-74px)] translate-y-4' : ''}`}>
+      <div className='fixed bottom-32 inset-x-0'>
+        <div className={`wrapper transition-transform ease-out ${expanded ? 'translate-x-[calc(50%-74px)] translate-y-12' : ''}`}>
           <button
             onClick={() => setExpanded(!expanded)}
             className='expander button rounded-full absolute left-1/2 -translate-x-1/2 bottom-0 p-3'
